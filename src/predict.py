@@ -1,3 +1,4 @@
+
 import os
 import joblib
 import pandas as pd
@@ -9,30 +10,35 @@ MODEL_PATH = os.path.join(BASE_DIR, "models", "model.joblib")
 # Chargement du modèle
 model = joblib.load(MODEL_PATH)
 
-# Fonction de prédiction
+# Colonnes nécessaires pour la prédiction
+EXPECTED_COLUMNS = [
+    "duration",
+    "protocol",
+    "dst_port",
+    "src_bytes",
+    "dst_bytes",
+    "nb_packets",
+    "nb_failed_logins",
+    "nb_conn_same_host",
+    "syn_rate"
+]
+
 def predict(df: pd.DataFrame) -> list:
+    """Prédit si les connexions réseau sont normales ou malveillantes."""
 
-    expected_columns = [
-        "duration",
-        "protocol",
-        "dst_port",
-        "src_bytes",
-        "dst_bytes",
-        "nb_packets",
-        "nb_failed_logins",
-        "nb_conn_same_host",
-        "syn_rate"
-    ]
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Les données doivent être un DataFrame pandas.")
 
-    # Vérification des colonnes
+    if df.empty:
+        raise ValueError("Le DataFrame est vide.")
+
     missing_columns = [
-        col for col in expected_columns if col not in df.columns
+        col for col in EXPECTED_COLUMNS if col not in df.columns
     ]
 
     if missing_columns:
         raise ValueError(f"Colonnes manquantes : {missing_columns}")
 
-    # Prédiction
-    predictions = model.predict(df[expected_columns])
+    predictions = model.predict(df[EXPECTED_COLUMNS])
 
     return predictions.astype(int).tolist()
