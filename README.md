@@ -87,6 +87,12 @@ Pour obtenir les versions : `pip freeze | grep -i -E "pandas|scikit|joblib|numpy
 | Régression logistique | 0,9202|0,90   |0,94 |
 | Arbre de décision | 0,9145| 0,93| 0,90|
 
+## Installation et exécution
+
+### 1. Installer les dépendances
+
+```bash
+pip install -r requirements.txt
 **Modèle retenu et pourquoi :**
 La régression logistique est retenue, car elle obtient le meilleur F1-score
 pour la classe attaque, avec une valeur de 0,9202.
